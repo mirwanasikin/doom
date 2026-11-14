@@ -1,0 +1,30 @@
+#+title: My Personal Doom Emacs Config
+#+author: M. Irwan Asikin
+#+OPTIONS: toc:nil
+
+This Configuration of my Doom Emacs since I'm still new to Emacs.
+
+** Introduction
+So I was a Neovim users and right now is trying Doom Emacs. At first yes it is difficult
+because it's different from Neovim but the more I used the more I like it. Actually I
+put this Doom config one with the other dotfiles in [[https://codeberg.org/mirwanasikin/dotfiles][Dotfiles]] in codeberg. But now I
+decided to put it alone since I use it with NixOS.
+
+** Feature I Used
+So of course there's some feature i love and use and it's actually can replace some of
+my workflows.
+
+| Features     | Neovim/Terminal | Emacs      |
+| Editor       | Neovim          | Doom Emacs |
+| Terminal     | Foot            | Ghostel    |
+| Git          | Lazygit         | Magit      |
+| Music Player | MPV             | emms       |
+| File Manager | Yazi            | dired      |
+| SSH          | SSH             | TRAMP      |
+
+Those stack I really Love it.
+
+** The continuous
+I will keep using Emacs at least for my main daily driver but I will not removing Neovim
+from my config since if we're being honest Neovim speed is insane. Oh yeah if you're
+interested in my config of my machine here's my [[https:gitlab.com/mirwanasikin/nixos-config][NixOS Config]] in Gitlab.
