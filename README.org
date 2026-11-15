@@ -15,6 +15,7 @@ So of course there's some feature i love and use and it's actually can replace s
 my workflows.
 
 | Features     | Neovim/Terminal | Emacs      |
+|--------------+-----------------+------------|
 | Editor       | Neovim          | Doom Emacs |
 | Terminal     | Foot            | Ghostel    |
 | Git          | Lazygit         | Magit      |
