@@ -58,10 +58,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type `relative)
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
-
 (setq doom-font (font-spec :family "CaskaydiaMono Nerd Font Mono" :size 16))
 (add-to-list 'default-frame-alist '(alpha-background . 90))
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -287,3 +283,32 @@
   (setq org-wild-notifier-alert-time '(30 5))
   (setq alert-default-style 'libnotify)
   (org-wild-notifier-mode 1))
+
+(setq org-roam-directory "~/org/notes/")
+
+;; Website Blog Template
+(after! org
+  (require 'ox-hugo))
+
+(defun my/new-blog-post (slug title)
+  "Bikin post baru di ~/org/notes/website-blog/SLUG/index.org."
+  (interactive "sSlug (contoh: open-source-tools): \nsJudul: ")
+  (let* ((dir (expand-file-name slug "~/org/notes/website-blog/"))
+         (file (expand-file-name "index.org" dir)))
+    (make-directory dir t)
+    (find-file file)
+    (when (= (buffer-size) 0)
+      (insert (format "#+title: %s
+#+date: %s
+#+options: toc:nil
+#+hugo_base_dir: ~/website
+#+hugo_section: blog/%s
+#+export_file_name: index
+#+hugo_level_offset: 1
+#+hugo_front_matter_format: yaml
+#+hugo_tags:
+
+"
+                      title (format-time-string "%Y-%m-%d") slug)))))
+
+(map! :leader :desc "New blog post" "n B" #'my/new-blog-post)
