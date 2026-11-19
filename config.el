@@ -178,9 +178,11 @@
          (pad (make-string (max 0 (/ (- (window-width) width) 2)) ?\s))
          (face (cl-find-if #'facep '(doom-dashboard-banner dashboard-banner
                                      font-lock-comment-face))))
-    (insert "\n")
+    (insert "
+")
     (dolist (line banner)
-      (insert (propertize (concat pad line "\n") 'face face)))))
+      (insert (propertize (concat pad line "
+") 'face face)))))
 
 ;; Ganti widget banner bawaan, apa pun nama variabel/fungsinya di versimu.
 (let ((var (cl-find-if #'boundp '(+dashboard-functions +doom-dashboard-functions))))
@@ -230,9 +232,21 @@
   (setq corfu-auto-delay 0.0
         corfu-auto-prefix 1))
 
-(after! lsp-pyright
-  (lsp-register-custom-settings
-   '(("python.analysis.completeFunctionParens" t t))))
+(after! lsp-completion
+  (defadvice! +my/lsp-python-complete-parens-a (candidate status &rest _)
+    "Sisipkan () otomatis setelah memilih Method/Function/Constructor di Python."
+    :after #'lsp-completion--exit-fn
+    (when (and (memq status '(finished exact))
+               (derived-mode-p 'python-mode 'python-ts-mode 'python-base-mode)
+               (not (looking-at-p "("))
+               (not (save-excursion
+                      (forward-line 0)
+                      (looking-at-p "[ 	]*\(?:@\|from[ 	]+\|import[ 	]+\)"))))
+      (when-let* ((item (get-text-property 0 'lsp-completion-item candidate))
+                  (kind (lsp:completion-item-kind? item)))
+        (when (memq kind '(2 3 4)) ; 2 = Method, 3 = Function, 4 = Constructor
+          (insert "()")
+          (backward-char 1))))))
 
 (after! pdf-tools
   (setq-default pdf-view-display-size 'fit-page))
@@ -270,11 +284,11 @@
 (setq! org-hide-emphasis-markers t)
 
 (setq org-directory "~/org")
-(setq org-agenda-files (directory-files-recursively "~/org" "\\.org$"))
+(setq org-agenda-files (directory-files-recursively "~/org" "\.org$"))
 
 (after! dired
   (setq dired-guess-shell-alist-user
-        '(("\\.\\(mp4\\|mkv\\|mov\\|avi\\|webm\\)\\'"
+        '(("\.\(mp4\|mkv\|mov\|avi\|webm\)\'"
            "mpv"))))
 
 (use-package! org-wild-notifier
@@ -292,7 +306,8 @@
 
 (defun my/new-blog-post (slug title)
   "Bikin post baru di ~/org/notes/website-blog/SLUG/index.org."
-  (interactive "sSlug (contoh: open-source-tools): \nsJudul: ")
+  (interactive "sSlug (contoh: open-source-tools): 
+sJudul: ")
   (let* ((dir (expand-file-name slug "~/org/notes/website-blog/"))
          (file (expand-file-name "index.org" dir)))
     (make-directory dir t)
